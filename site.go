@@ -202,7 +202,13 @@ func (s *Site) read() error {
 		}
 	}
 
+	for _, p := range s.pages {
+		url := p.GetUrl()
+		menuAdd(url)
+	}
+
 	// Add the posts, timestamp, etc to the Site Params
+	s.Conf.Set("menu", mainMenu())
 	s.Conf.Set("posts", s.posts)
 	s.Conf.Set("time", time.Now())
 	s.calculateTags()
@@ -225,6 +231,8 @@ func (s *Site) writePages() error {
 	for _, page := range pages {
 		url := page.GetUrl()
 		layout := page.GetLayout()
+
+		page.Set("menu", subMenu(url))
 
 		// is the layout provided? or is it nil /empty?
 		//layoutNil := layout == "" || layout == "nil"
